@@ -8,20 +8,20 @@ let Form = props => {
             <table>
                 <tbody>
                 <tr>
-                    <td>Tasks :</td>
+                    <td>Sub Tasks :</td>
                     <td>
                         {
-                            props.tasks.length > 0 ?
+                            props.subTasks.length > 0 ?
                                 <Field name="taskId" component="select"
                                        onChange={event => props.showTaskDetails(event.target.value)}>
                                     <option value="">Select Task</option>
-                                    {props.tasks.map((task) => (
-                                        <option key={'task_' + task.id} value={task.id}>
+                                    {props.subTasks.map((task) => (
+                                        <option key={'subTask_' + task.id} value={task.id}>
                                             {task.name}
                                         </option>
                                     ))}
                                 </Field> :
-                                <b>{props.loadTasks == true ? 'Load Tasks ....' : 'no data!'} </b>
+                                <b>{props.loadSubTasks == true ? 'Load Sub Tasks ....' : 'no data!'} </b>
                         }
                     </td>
                     <td>

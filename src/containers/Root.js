@@ -9,7 +9,7 @@ const config = {
     secret: "f5a37d66416da51ff9166b94335b0fc1",
     redirect: "http://localhost:8080/oauth/callback",
     width: 400, // Width (in pixels) of login popup window. Optional, default: 400
-    height: 400 // Height (in pixels) of login popup window. Optional, default: 400
+    height: window.innerHeight-20 // Height (in pixels) of login popup window. Optional, default: 400
 }
 
 const Login = ({ isLoggedIn, login, logout }) => {

@@ -4,15 +4,19 @@ import {
     LOAD_TASKS,
     SET_PROJECTS,
     LOAD_PROJECTS,
-    SET_WORKSPACES
+    SET_WORKSPACES,
+    SET_SUB_TASKS,
+    LOAD_SUB_TASKS
 } from "./actions"
 
 const initialState = {
     workspaces: [],
     projects: [],
     tasks: [],
+    subTasks: [],
     activeTask: {},
     loadTasks: null,
+    loadSubTasks: null,
     loadProjects: null,
 
 };
@@ -49,6 +53,19 @@ export default (state = initialState, action) => {
                 ...state,
                 tasks: action.payload,
                 loadTasks: false,
+            };
+            break;
+        case LOAD_SUB_TASKS:
+            state = {
+                ...state,
+                loadSubTasks: true,
+            };
+            break;
+        case SET_SUB_TASKS:
+            state = {
+                ...state,
+                subTasks: action.payload,
+                loadSubTasks: false,
             };
             break;
         case SET_ACTIVE_TASK:
