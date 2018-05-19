@@ -16,11 +16,20 @@ const render = Component => {
         document.getElementById('root')
     )
 }
+const RedBox = require('redbox-react').default;
+var doRender = () => {
 
-render(Root)
+    try {
+        render(Root)
+    } catch (e) {
+        render(<RedBox error={e}/>, Root)
+    }
+}
+
+doRender()
 
 if (module.hot) {
     module.hot.accept('./containers/Root', () => {
-        render(Root)
+        doRender()
     })
 }

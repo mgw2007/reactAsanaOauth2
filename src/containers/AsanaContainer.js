@@ -11,7 +11,8 @@ class AsanaContainer extends React.Component {
 
     submit(values) {
         // print the form values to the console
-        AsanaAPI.sendTaskExtraData(values).then((res) => {
+        console.log(values)
+        AsanaAPI.updateTaskCustomField(values).then((res) => {
             this.showTaskDetails(values.taskId)
         })
     }
@@ -35,6 +36,7 @@ class AsanaContainer extends React.Component {
     getProjectTasks(projectId) {
         if (projectId) {
             this.props.dispatch(loadTasks());
+
             AsanaAPI.getTasks(projectId).then((res) => {
                 this.props.dispatch(setTasks(res.data.data))
             })
@@ -49,6 +51,7 @@ class AsanaContainer extends React.Component {
             })
         }
     }
+
     getTaskSubTasks(taskId) {
         if (taskId) {
             this.props.dispatch(loadSubTasks());
@@ -56,6 +59,31 @@ class AsanaContainer extends React.Component {
                 this.props.dispatch(setSubTasks(res.data.data))
             })
         }
+    }
+
+    getFormDefaultValues() {
+        let data = {}
+        if (this.props.activeTask.custom_fields) {
+            data['taskId'] = this.props.activeTask.id;
+            data['custom_field'] = {};
+            this.props.activeTask.custom_fields.map(custom_field => {
+                switch (custom_field.type) {
+                    case "enum":
+                        data['custom_field'][custom_field.id] = custom_field.enum_value ? custom_field.enum_value.id : '    ';
+                        break;
+                    case "number":
+                        data['custom_field'][custom_field.id] = custom_field.number_value
+                        break;
+                    case "text":
+                        data['custom_field'][custom_field.id] = custom_field.text_value;
+                        break;
+                }
+            })
+
+        }
+        console.log('data')
+        console.log(data)
+        return data;
     }
 
     render() {
@@ -88,26 +116,14 @@ class AsanaContainer extends React.Component {
                     <b>{this.props.loadProjects == true ? 'Load Projects ....' : 'no data!'}</b>
             }
             <hr/>
-            <h4>Select Task</h4>
-            {
-                this.props.tasks.length > 0 ?
-                    <select onChange={event => this.getTaskSubTasks(event.target.value)}>
-                        <option value="">Select Task</option>
-                        {this.props.tasks.map((task) => (
-                            <option key={'tasks_' + task.id} value={task.id}>
-                                {task.name}
-                            </option>
-                        ))}
-                    </select> :
-                    <b>{this.props.loadTasks == true ? 'Load Tasks ....' : 'no data!'}</b>
-            }
-            <hr/>
+
 
             <Form onSubmit={this.submit.bind(this)}
-                  subTasks={this.props.subTasks}
-                  loadSubTasks={this.props.loadSubTasks}
+                  tasks={this.props.tasks}
+                  loadTasks={this.props.loadTasks}
                   showTaskDetails={this.showTaskDetails.bind(this)}
                   activeTask={this.props.activeTask}
+                  initialValues={this.getFormDefaultValues()}
             />
             <hr/>
             <button type='button' onClick={this.props.logout}>Logout</button>

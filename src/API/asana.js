@@ -19,6 +19,14 @@ export default {
             }
         }, requestHeaders());
     },
+    updateTaskCustomField: (data) => {
+        console.log('DAXX',data)
+        return axios.put(`${localApiUrl}tasks/${data.taskId}`, {
+            data: {
+                custom_fields: data.custom_field
+            }
+        }, requestHeaders());
+    },
     getTaskData: (taskId) => {
         return axios.get(`${localApiUrl}tasks/${taskId}`, requestHeaders());
     },
@@ -27,6 +35,9 @@ export default {
     },
     getTasks: (projectId) => {
         return axios.get(`${localApiUrl}tasks?opt_pretty&opt_fields=this.name,this.memberships.section,this.memberships.section.name&project=${projectId}`, requestHeaders());
+    },
+    getCustomFields: (projectId) => {
+        return axios.get(`${localApiUrl}projects/${projectId}/custom_field_settings`, requestHeaders());
     },
     getProjects: (workspaceId) => {
         return axios.get(`${localApiUrl}projects?workspace=${workspaceId}`, requestHeaders());

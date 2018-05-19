@@ -1,5 +1,6 @@
 import React from 'react'
 import {Field, reduxForm} from 'redux-form'
+import renderCustomField from "./RenderCustomFields";
 
 let Form = props => {
     const {handleSubmit} = props
@@ -8,21 +9,20 @@ let Form = props => {
             <table>
                 <tbody>
                 <tr>
-                    <td>Sub Tasks :</td>
                     <td>
-                        {
-                            props.subTasks.length > 0 ?
-                                <Field name="taskId" component="select"
-                                       onChange={event => props.showTaskDetails(event.target.value)}>
-                                    <option value="">Select Task</option>
-                                    {props.subTasks.map((task) => (
-                                        <option key={'subTask_' + task.id} value={task.id}>
-                                            {task.name}
-                                        </option>
-                                    ))}
-                                </Field> :
-                                <b>{props.loadSubTasks == true ? 'Load Sub Tasks ....' : 'no data!'} </b>
-                        }
+                        Tasks :{
+                        props.tasks.length > 0 ?
+                            <Field name="taskId" component="select"
+                                   onChange={event => props.showTaskDetails(event.target.value)}>
+                                <option value="">Select Task</option>
+                                {props.tasks.map((task) => (
+                                    <option key={'task_' + task.id} value={task.id}>
+                                        {task.name}
+                                    </option>
+                                ))}
+                            </Field> :
+                            <b>{props.loadTasks == true ? 'Load Tasks ....' : 'no data!'} </b>
+                    }
                     </td>
                     <td>
                         {
@@ -31,6 +31,10 @@ let Form = props => {
                                 <tr>
                                     <td>Id</td>
                                     <td>{props.activeTask.id}</td>
+                                </tr>
+                                <tr>
+                                    <td>Custom Fields</td>
+                                    <td>{JSON.stringify(props.activeTask.custom_fields)}</td>
                                 </tr>
                                 <tr>
                                     <td>assignee</td>
@@ -52,9 +56,11 @@ let Form = props => {
                 </tr>
 
                 <tr>
-                    <td>Data :</td>
-                    <td><Field name="myData" component="input" type="text"/></td>
-                    <td></td>
+                    <td>
+                        {
+                            props.activeTask.custom_fields && props.activeTask.custom_fields.map(custom_field => renderCustomField(custom_field))
+                        }
+                    </td>
                 </tr>
                 <tr>
                     <td colSpan="3">
@@ -69,5 +75,6 @@ let Form = props => {
 
 export default reduxForm({
     // a unique name for the form
-    form: 'asanaForm'
+    form: 'asanaForm',
+    enableReinitialize: true
 })(Form)
